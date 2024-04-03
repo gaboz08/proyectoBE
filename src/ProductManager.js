@@ -33,20 +33,34 @@ class ProductManager {
         }
         return product;
     }
+    updateProduct(id, { title, description, price, thumbnail, code, stock }) {
+        const index = this.products.findIndex(product => product.id === id);
+        if (index === -1) {
+            console.error('Producto no encontrado');
+            return;
+        }
+        this.products[index] = { ...this.products[index], title, description, price, thumbnail, stock };
+    }
+
+    deleteProduct(id) {
+        const index = this.products.findIndex(product => product.id === id);
+        if (index === -1) {
+            console.error('Producto no encontrado');
+            return;
+        }
+        this.products.splice(index, 1);
+    }
 }
 
-console.log("Iniciando pruebas...");
+console.log("Iniciando pruebas extendidas...");
 
-// Crear instancia de ProductManager
-const productManager = new ProductManager();
+const manager = new ProductManager();
 
-// Test 1: Llamada a getProducts recién creada la instancia
-console.log("Test 1: getProducts debe devolver un arreglo vacío");
-console.log(productManager.getProducts()); // Debe mostrar []
 
-// Test 2: Agregar un producto
-console.log("Test 2: Agregar un producto y verificar que se agrega correctamente");
-productManager.addProduct({
+console.log(manager.getProducts()); // []
+
+
+manager.addProduct({
     title: "producto prueba",
     description: "Este es un producto prueba",
     price: 200,
@@ -55,26 +69,27 @@ productManager.addProduct({
     stock: 25
 });
 
-// Test 3: Verificar que getProducts devuelve el producto agregado
-console.log("Test 3: Llamar a getProducts para verificar que el producto se ha agregado");
-console.log(productManager.getProducts()); // Debe mostrar el producto agregado
 
-// Test 4: Intentar agregar un producto con el mismo código para verificar el manejo de errores
-console.log("Test 4: Agregar un producto con el mismo código debe mostrar un error");
-productManager.addProduct({
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25
+console.log(manager.getProducts());
+
+
+console.log(manager.getProductById(1)); 
+
+
+manager.updateProduct(1, {
+    title: "producto prueba actualizado",
+    description: "Descripción actualizada",
+    price: 250,
+    thumbnail: "Imagen actualizada",
+    stock: 30
 });
 
-// Test 5: Verificar getProductById con un ID que existe y uno que no existe
-console.log("Test 5: getProductById con un ID que existe y uno que no existe");
-console.log(productManager.getProductById(1)); // Debe mostrar el producto
-console.log(productManager.getProductById(999)); // Debe mostrar "Not found"
+console.log(manager.getProductById(1)); 
 
-console.log("Pruebas finalizadas.");
+manager.deleteProduct(1);
+console.log(manager.getProducts()); // []
 
-console.error("Fin del script con error");
+
+manager.deleteProduct(999); 
+
+console.log("Pruebas extendidas finalizadas.");
